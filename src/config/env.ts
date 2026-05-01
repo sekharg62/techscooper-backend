@@ -17,4 +17,15 @@ export const env = {
     process.env.CORS_ORIGIN,
     'http://localhost:5173',
   ),
+  /** App / Prisma Client — often pooler URL on Supabase (port 6543). */
+  DATABASE_URL: process.env.DATABASE_URL?.trim() ?? '',
+  /**
+   * Optional direct Postgres URL (e.g. Supabase `db.<project>.supabase.co:5432`) for
+   * `prisma db push` / migrate via `prisma.config.ts`. App code still uses `DATABASE_URL`.
+   */
+  DIRECT_URL: process.env.DIRECT_URL?.trim() ?? '',
+  /** JWT signing secret (required for auth). */
+  JWT_SECRET: process.env.JWT_SECRET?.trim() ?? '',
+  /** Passed to jsonwebtoken `expiresIn` (e.g. `7d`, `12h`). */
+  JWT_EXPIRES_IN: optionalString(process.env.JWT_EXPIRES_IN, '7d'),
 } as const

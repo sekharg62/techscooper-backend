@@ -1,0 +1,92 @@
+// Prisma schema — https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum UserRole {
+  ADMIN
+  USER
+}
+
+enum ProductCategory {
+  ELECTRONICS
+  MOBILE
+  LAPTOP
+  ACCESSORIES
+
+  CLOTHING
+  FOOTWEAR
+  FASHION_ACCESSORIES
+
+  HOME
+  FURNITURE
+  HOME_DECOR
+  KITCHEN
+  APPLIANCES
+
+  BEAUTY
+  PERSONAL_CARE
+
+  BOOKS
+  STATIONERY
+
+  SPORTS
+  FITNESS
+
+  TOYS
+  BABY_PRODUCTS
+
+  AUTOMOTIVE
+
+  GROCERY
+  FOOD
+  BEVERAGES
+
+  HEALTH
+  MEDICAL
+
+  PET_SUPPLIES
+
+  OFFICE_SUPPLIES
+
+  JEWELRY
+
+  GAMES
+  SOFTWARE
+
+  TRAVEL
+
+  OTHER
+}
+
+/// Application account: admins and normal users share `name`; `role` distinguishes them.
+model User {
+  id        String   @id @default(uuid()) @db.Uuid
+  email     String   @unique
+  name      String?
+  role      UserRole @default(USER)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("users")
+}
+
+model Product {
+  id           String           @id @default(uuid()) @db.Uuid
+  name         String
+  description  String           @db.Text
+  actualPrice  Decimal          @db.Decimal(12, 2)
+  /** Sale / promotional price; when null, UI can treat `actualPrice` as the only price. */
+  offerPrice   Decimal?         @db.Decimal(12, 2)
+  category     ProductCategory
+  createdAt    DateTime         @default(now())
+  updatedAt    DateTime         @updatedAt
+
+  @@map("products")
+}
