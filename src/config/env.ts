@@ -28,4 +28,9 @@ export const env = {
   JWT_SECRET: process.env.JWT_SECRET?.trim() ?? '',
   /** Passed to jsonwebtoken `expiresIn` (e.g. `7d`, `12h`). */
   JWT_EXPIRES_IN: optionalString(process.env.JWT_EXPIRES_IN, '7d'),
+  /**
+   * MongoDB connection string (e.g. MongoDB Atlas). Optional — if empty, Mongo is skipped.
+   * Replace the demo URI with yours from Atlas → Connect → Drivers.
+   */
+  MONGODB_URI: process.env.MONGODB_URI?.trim() ?? '',
 } as const
