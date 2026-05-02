@@ -14,6 +14,12 @@ enum UserRole {
   USER
 }
 
+enum Gender {
+  MALE
+  FEMALE
+  OTHER
+}
+
 enum ProductCategory {
   ELECTRONICS
   MOBILE
@@ -70,6 +76,8 @@ model User {
   id        String   @id @default(uuid()) @db.Uuid
   email     String   @unique
   name      String?
+  gender    Gender?
+  age       Int?
   role      UserRole @default(USER)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
