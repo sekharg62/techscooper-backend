@@ -1,4 +1,6 @@
 import { PrismaPg } from '@prisma/adapter-pg'
+import { Pool } from 'pg'
+
 import { PrismaClient } from '../generated/prisma/index.js'
 import { env } from '../config/env.js'
 
@@ -10,7 +12,12 @@ function createPrismaClient(): PrismaClient {
     )
   }
 
-  const adapter = new PrismaPg({ connectionString: env.DATABASE_URL })
+  const pool = new Pool({
+    connectionString: env.DATABASE_URL,
+    max: 10,
+    connectionTimeoutMillis: 10_000,
+  })
+  const adapter = new PrismaPg(pool)
   return new PrismaClient({ adapter })
 }
 

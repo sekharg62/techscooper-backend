@@ -261,15 +261,16 @@ export async function listProductsPaginated(params: {
 
   const skip = (page - 1) * limit
 
-  const [total, rows] = await prisma.$transaction([
-    prisma.product.count({ where }),
-    prisma.product.findMany({
-      where,
-      orderBy: { createdAt: 'desc' },
-      skip,
-      take: limit,
-    }),
-  ])
+  // Prefer separate queries over `$transaction`: listing `total + page` does not need
+  // transactional consistency; a transaction uses a pooled conn longer and triggers
+  // "Unable to start a transaction in the given time" under Supabase/pg pool contention.
+  const total = await prisma.product.count({ where })
+  const rows = await prisma.product.findMany({
+    where,
+    orderBy: { createdAt: 'desc' },
+    skip,
+    take: limit,
+  })
 
   const totalPages = total === 0 ? 0 : Math.ceil(total / limit)
 
